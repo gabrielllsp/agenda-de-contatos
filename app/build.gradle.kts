@@ -78,6 +78,6 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.0")
 
     //Navigation
-    implementation ("androidx.navigation:navigation-compose:2.7.5")
+    implementation ("androidx.navigation:navigation-compose:2.5.3")
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 }

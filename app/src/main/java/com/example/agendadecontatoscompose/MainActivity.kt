@@ -7,9 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.agendadecontatoscompose.views.ContactList
-import com.example.agendadecontatoscompose.views.SaveContacts
-import com.example.agendadecontatoscompose.views.UpdateContacts
+import com.example.agendadecontatoscompose.views.AtualizarContatos
+import com.example.agendadecontatoscompose.views.ListaContatos
+import com.example.agendadecontatoscompose.views.SalvarContatos
 
 
 class MainActivity : ComponentActivity() {
@@ -22,15 +22,15 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = "contactList"){
-                    composable("contactList"){
-                        ContactList(navController)
+                    startDestination = "listaContatos"){
+                    composable("listaContatos"){
+                        ListaContatos(navController)
                     }
-                    composable("saveContacts"){
-                        SaveContacts(navController)
+                    composable("salvarContatos"){
+                        SalvarContatos(navController)
                     }
-                    composable("updateContacts"){
-                        UpdateContacts(navController)
+                    composable("atualizarContatos"){
+                        AtualizarContatos(navController)
                     }
                 }
 
