@@ -4,6 +4,7 @@ import Dark_green
 import Green
 import WHITE
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,21 +18,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.agendadecontatoscompose.AppDatabase
 import com.example.agendadecontatoscompose.components.ButtonCustom
 import com.example.agendadecontatoscompose.components.OutlinedTextFieldCustom
+import com.example.agendadecontatoscompose.dao.ContatoDao
+import com.example.agendadecontatoscompose.model.Contato
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+private lateinit var contatoDao: ContatoDao
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SalvarContatos(navController: NavController) {
+
+    val listaContatos: MutableList<Contato> = mutableListOf()
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     var nome by remember {
         mutableStateOf("")
@@ -133,10 +146,28 @@ fun SalvarContatos(navController: NavController) {
             )
 
             ButtonCustom(onClick = {
-                if (nome.isEmpty() || sobreNome.isEmpty() || idade.isEmpty() || celular.isEmpty()) {
-                    println("Preencha todos os campos!")
-                } else {
-                    println("Usuário criado com sucesso!")
+
+                var mensagem = false
+
+                scope.launch(Dispatchers.IO){
+
+                    if (nome.isEmpty() || sobreNome.isEmpty() || idade.isEmpty() || celular.isEmpty()) {
+                        mensagem = false
+                    } else {
+                        val contato = Contato(nome, sobreNome, idade, celular)
+                        mensagem = true
+                        listaContatos.add(contato)
+                        contatoDao = AppDatabase.getInstance(context).contatoDao()
+                        contatoDao.gravar(listaContatos)
+                    }
+                }
+                scope.launch(Dispatchers.Main){
+                    if (mensagem){
+                        Toast.makeText(context, "Contato salvo com sucesso.", Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    }else{
+                        Toast.makeText(context, "Preencha todos os campos!!", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
             }, text = "Salvar")
