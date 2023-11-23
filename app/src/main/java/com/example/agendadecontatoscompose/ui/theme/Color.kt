@@ -8,6 +8,6 @@ val WHITE = Color(0xFFFFFFFF)
 val RED  = Color(0xFFFF0000)
 
 val Gray = Color(0XFFcad2c5)
-val Light_green  = Color(0xFF84a98c)
+val Light_green  = Color(0xFFd8f3dc)
 val Green  = Color(0xFF52796f)
 val Dark_green  = Color(0xFF354f52)
