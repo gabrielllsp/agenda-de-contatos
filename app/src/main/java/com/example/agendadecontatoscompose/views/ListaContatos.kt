@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private lateinit var contatoDao: ContatoDao
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun ListaContatos(navController: NavController) {
@@ -40,7 +41,7 @@ fun ListaContatos(navController: NavController) {
         contatoDao = AppDatabase.getInstance(context).contatoDao()
         val contatos = contatoDao.getContatos()
 
-        for (contato in contatos){
+        for (contato in contatos) {
             listaContatos.add(contato)
         }
     }
@@ -58,7 +59,7 @@ fun ListaContatos(navController: NavController) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                          navController.navigate("salvarContatos")
+                    navController.navigate("salvarContatos")
                 },
                 backgroundColor = Dark_green,
                 contentColor = WHITE
@@ -70,8 +71,8 @@ fun ListaContatos(navController: NavController) {
             }
         }
     ) {
-        LazyColumn{
-            itemsIndexed(listaContatos){position, item ->
+        LazyColumn {
+            itemsIndexed(listaContatos) { position, item ->
                 ContatoItem(navController, position, listaContatos, context)
 
             }
