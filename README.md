@@ -1,5 +1,6 @@
 # Agenda de contatos
-Projeto agenda de contatos em Compose. 
+Projeto agenda de contatos feito com a arquitetura moderna do android e Jetpack Compose.
+O aplicativo salva os dados digitados do contato, atualiza e exclui.
 
 
 
