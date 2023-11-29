@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.agendadecontatoscompose.AppDatabase
@@ -34,13 +35,14 @@ import com.example.agendadecontatoscompose.components.ButtonCustom
 import com.example.agendadecontatoscompose.components.OutlinedTextFieldCustom
 import com.example.agendadecontatoscompose.dao.ContatoDao
 import com.example.agendadecontatoscompose.model.Contato
+import com.example.agendadecontatoscompose.viewmodel.ContatoViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private lateinit var contatoDao: ContatoDao
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SalvarContatos(navController: NavController) {
+fun SalvarContatos(navController: NavController, viewModel: ContatoViewModel = hiltViewModel()) {
 
     val listaContatos: MutableList<Contato> = mutableListOf()
     val scope = rememberCoroutineScope()

@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.agendadecontatoscompose.AppDatabase
@@ -24,6 +25,7 @@ import com.example.agendadecontatoscompose.R
 import com.example.agendadecontatoscompose.dao.ContatoDao
 import com.example.agendadecontatoscompose.itemlist.ContatoItem
 import com.example.agendadecontatoscompose.model.Contato
+import com.example.agendadecontatoscompose.viewmodel.ContatoViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -31,7 +33,7 @@ private lateinit var contatoDao: ContatoDao
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
-fun ListaContatos(navController: NavController) {
+fun ListaContatos(navController: NavController, viewModel: ContatoViewModel = hiltViewModel()) {
 
     val context = LocalContext.current
     val listaContatos: MutableList<Contato> = mutableListOf()
