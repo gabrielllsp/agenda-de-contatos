@@ -13,7 +13,10 @@ O aplicativo salva os dados digitados do contato, atualiza e exclui.
 * JetPack Compose
 * Room
 * Navigation
-* Coroutines    
+* Coroutines
+* Mvvm
+* Hilt
+* StateFlow    
 - Components de UI
     - AppBar
     - FloatingActionButton 
