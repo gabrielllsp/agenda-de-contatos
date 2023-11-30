@@ -22,15 +22,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.agendadecontatoscompose.AppDatabase
 import com.example.agendadecontatoscompose.R
-import com.example.agendadecontatoscompose.dao.ContatoDao
 import com.example.agendadecontatoscompose.model.Contato
+import com.example.agendadecontatoscompose.viewmodel.ContatoViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-private lateinit var contatoDao: ContatoDao
 
 @Composable
 fun ContatoItem(
@@ -38,7 +37,9 @@ fun ContatoItem(
     position: Int,
     listaContatos: MutableList<Contato>,
     context: Context,
-) {
+    viewModel: ContatoViewModel = hiltViewModel()
+){
+
     val scope = rememberCoroutineScope()
 
     val nome = listaContatos[position].nome
@@ -46,27 +47,27 @@ fun ContatoItem(
     val idade = listaContatos[position].idade
     val celular = listaContatos[position].celular
     val uid = listaContatos[position].uid
-    val contato = listaContatos[position]
 
-    fun alertDialogDeletarContato() {
+
+    fun alertDialogDeletarContato(){
         val alertDialog = AlertDialog.Builder(context)
         alertDialog.setTitle("Deseja Excluir?")
             .setMessage("Tem certeza?")
-        alertDialog.setPositiveButton("Ok") { _, _ ->
+        alertDialog.setPositiveButton("OK"){_,_ ->
             scope.launch(Dispatchers.IO){
-                contatoDao = AppDatabase.getInstance(context).contatoDao()
-                contatoDao.delete(uid)
-                listaContatos.remove(contato)
+                viewModel.deletarContato(uid)
             }
+
             scope.launch(Dispatchers.Main){
                 navController.navigate("listaContatos")
-                Toast.makeText(context, "Contato excluido com sucesso.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"Contato removido com sucesso!",Toast.LENGTH_SHORT).show()
             }
+        }
+
+        alertDialog.setNegativeButton("Cancelar"){_,_ ->
 
         }
-        alertDialog.setNegativeButton("Cancelar") { _, _ ->
 
-        }
         alertDialog.show()
     }
 
@@ -82,30 +83,34 @@ fun ContatoItem(
         ConstraintLayout(
             modifier = Modifier.padding(10.dp)
         ) {
-            val (txtNome, txtSobreNome, txtIdade, txtCelular, btAtualizar, btDeletar) = createRefs()
+
+            val (txtNome,txtIdade,txtCelular,btAtualizar,btDeletar) = createRefs()
+
             Text(
                 text = "Contato: $nome $sobrenome",
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 color = Color.Black,
-                modifier = Modifier.constrainAs(txtNome) {
+                modifier = Modifier.constrainAs(txtNome){
                     top.linkTo(parent.top, margin = 10.dp)
                     start.linkTo(parent.start, margin = 10.dp)
                 }
             )
+
             Text(
                 text = "Idade: $idade",
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 color = Color.Black,
-                modifier = Modifier.constrainAs(txtIdade) {
+                modifier = Modifier.constrainAs(txtIdade){
                     top.linkTo(txtNome.bottom, margin = 3.dp)
                     start.linkTo(parent.start, margin = 10.dp)
                 }
             )
+
             Text(
                 text = "Número: $celular",
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 color = Color.Black,
-                modifier = Modifier.constrainAs(txtCelular) {
+                modifier = Modifier.constrainAs(txtCelular){
                     top.linkTo(txtIdade.bottom, margin = 3.dp)
                     start.linkTo(parent.start, margin = 10.dp)
                 }
@@ -130,10 +135,12 @@ fun ContatoItem(
                 )
             ) {
                 Image(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_edit),
-                    contentDescription = "Icone de editar contato"
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_edit),
+                    contentDescription = "Ícone de editar contato"
                 )
             }
+
+
             Button(
                 onClick = {
                     alertDialogDeletarContato()
@@ -151,10 +158,11 @@ fun ContatoItem(
                 )
             ) {
                 Image(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_delete),
-                    contentDescription = "Icone de deletar contato"
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete),
+                    contentDescription = "Ícone de deletar contato"
                 )
             }
+
         }
     }
 

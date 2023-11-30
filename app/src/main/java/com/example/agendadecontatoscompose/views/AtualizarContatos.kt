@@ -1,7 +1,6 @@
 package com.example.agendadecontatoscompose.views
 
 import Dark_green
-import Green
 import WHITE
 import android.annotation.SuppressLint
 import android.widget.Toast
@@ -30,15 +29,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.agendadecontatoscompose.AppDatabase
 import com.example.agendadecontatoscompose.components.ButtonCustom
 import com.example.agendadecontatoscompose.components.OutlinedTextFieldCustom
-import com.example.agendadecontatoscompose.dao.ContatoDao
 import com.example.agendadecontatoscompose.viewmodel.ContatoViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-private lateinit var contatoDao: ContatoDao
 
 @Composable
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -58,9 +54,11 @@ fun AtualizarContatos(navController: NavController, viewModel: ContatoViewModel 
     var idade by remember {
         mutableStateOf("")
     }
+
     var celular by remember {
         mutableStateOf("")
     }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -70,9 +68,8 @@ fun AtualizarContatos(navController: NavController, viewModel: ContatoViewModel 
                     Text(text = "Atualizar Contato", fontSize = 18.sp)
                 }
             )
-        },
-
-        ) {
+        }
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -86,7 +83,7 @@ fun AtualizarContatos(navController: NavController, viewModel: ContatoViewModel 
                     nome = it
                 },
                 label = {
-                    Text(text = "Nome", color = Green)
+                    Text(text = "Nome")
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text
@@ -102,7 +99,7 @@ fun AtualizarContatos(navController: NavController, viewModel: ContatoViewModel 
                     sobreNome = it
                 },
                 label = {
-                    Text(text = "Sobrenome", color = Green)
+                    Text(text = "Sobrenome")
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text
@@ -118,7 +115,7 @@ fun AtualizarContatos(navController: NavController, viewModel: ContatoViewModel 
                     idade = it
                 },
                 label = {
-                    Text(text = "Idade", color = Green)
+                    Text(text = "Idade")
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
@@ -128,14 +125,13 @@ fun AtualizarContatos(navController: NavController, viewModel: ContatoViewModel 
                     .padding(20.dp, 0.dp, 20.dp, 10.dp)
             )
 
-
             OutlinedTextFieldCustom(
                 value = celular,
                 onValueChange = {
                     celular = it
                 },
                 label = {
-                    Text(text = "Celular", color = Green)
+                    Text(text = "Celular")
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Phone
@@ -145,39 +141,31 @@ fun AtualizarContatos(navController: NavController, viewModel: ContatoViewModel 
                     .padding(20.dp, 0.dp, 20.dp, 10.dp)
             )
 
-            ButtonCustom(onClick = {
+            ButtonCustom(
+                onClick = {
 
-                var mensagem = false
+                    val mensagem: Boolean
 
-                scope.launch(Dispatchers.IO) {
                     if (nome.isEmpty() || sobreNome.isEmpty() || idade.isEmpty() || celular.isEmpty()) {
                         mensagem = false
                     } else {
                         mensagem = true
-                        contatoDao = AppDatabase.getInstance(context).contatoDao()
-                        contatoDao.atualizar(uid.toInt(), nome, sobreNome, idade, celular)
-                    }
-                }
-
-                scope.launch(Dispatchers.Main) {
-                    if (mensagem) {
-                        Toast.makeText(
-                            context,
-                            "Usuário atualizado com sucesso",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        navController.popBackStack()
-                    } else {
-                        Toast.makeText(context, "Preencha todos os campos", Toast.LENGTH_SHORT)
-                            .show()
+                        viewModel.atualizarContato(uid.toInt(),nome,sobreNome,idade,celular)
                     }
 
-                }
+                    scope.launch(Dispatchers.Main){
+                        if (mensagem){
+                            Toast.makeText(context,"Sucesso ao atualizar o contato!",Toast.LENGTH_SHORT).show()
+                            navController.popBackStack()
+                        }else{
+                            Toast.makeText(context,"Preencha todos os campos!",Toast.LENGTH_SHORT).show()
+                        }
+                    }
 
-
-            }, text = "Atualizar")
+                },
+                text = "Atualizar"
+            )
         }
-
     }
 }
 
